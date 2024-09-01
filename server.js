@@ -8,7 +8,9 @@ const port = 3001;
 // Middleware
 app.use(cors({ origin: 'https://onebox-pi.vercel.app' })); // Update origin to match your frontend's domain
 app.use(bodyParser.json());
-
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
 // Set CSP headers
 app.use((req, res, next) => {
   res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com");

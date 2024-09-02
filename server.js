@@ -3,14 +3,27 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3001;
+const port = 3001; // Updated port
 
 // Middleware
-app.use(cors({ origin: 'https://onebox-pi.vercel.app' })); // Update origin to match your frontend's domain
+const allowedOrigins = ['http://localhost:3000', 'https://onebox-pi.vercel.app'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+
 app.use(bodyParser.json());
+
 app.get('/', (req, res) => {
   res.send('Server is running');
 });
+
 // Set CSP headers
 app.use((req, res, next) => {
   res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com");

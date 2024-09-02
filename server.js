@@ -89,14 +89,20 @@ app.delete('/api/onebox/:thread_id', (req, res) => {
 });
 
 app.post('/api/reply/:thread_id', (req, res) => {
+  const { thread_id } = req.params;
   const { from, to, subject, body } = req.body;
-  const thread = threads.find(t => t.id === parseInt(req.params.thread_id));
+
+  const thread = threads.find(t => t.id === parseInt(thread_id));
   if (thread) {
+    thread.replies = thread.replies || [];
+    thread.replies.push({ from, to, subject, body });
+
     res.status(200).json({ message: 'Reply sent' });
   } else {
     res.status(404).json({ message: 'Thread not found' });
   }
 });
+
 
 // Start the server
 app.listen(port, () => {
